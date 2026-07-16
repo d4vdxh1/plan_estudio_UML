@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Ingeniería del Software 1 y Examen Práctico UML</title>
+    <script src="https://cdn.jsdelivr.net/npm/plantuml-encoder@1.4.0/dist/plantuml-encoder.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #2d3436;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+        
+        /* Layout con Sidebar */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 260px;
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            background: #fafafa;
+        }
+        
+        .sidebar-header h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .sidebar nav {
+            padding: 15px 0;
+        }
+        
+        .sidebar nav ul {
+            list-style: none;
+        }
+        
+        .sidebar nav li {
+            margin: 0;
+        }
+        
+        .sidebar nav a {
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #555;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar nav a:hover {
+            background: #f5f5f5;
+            color: #333;
+            border-left-color: #666;
+        }
+        
+        /* Hamburger Menu */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px 12px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .menu-toggle span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: #333;
+            margin: 4px 0;
+            transition: 0.3s;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 40px;
+            max-width: 1200px;
+        }
+        
+        h1 {
+            color: #1a1a2e;
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 40px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        h2 {
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin: 35px 0 20px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        h3 {
+            color: #444;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin: 25px 0 15px 0;
+        }
+        
+        section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9em;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        tr:hover {
+            background: #fafafa;
+        }
+        
+        ul, ol {
+            margin: 15px 0 15px 25px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        strong {
+            color: #333;
+        }
+        
+        .examen-section {
+            background: #4a5568;
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+        }
+        
+        .examen-section h2,
+        .examen-section h3 {
+            color: white;
+            border-bottom-color: rgba(255,255,255,0.3);
+        }
+        
+        .examen-section strong {
+            color: #ffd700;
+        }
+        
+        .examen-section table th {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+        
+        .examen-section table td {
+            color: white;
+        }
+
+        .diagram-title {
+            font-weight: 600;
+            margin: 16px 0 8px;
+            font-size: 0.95em;
+            color: #34495e;
+        }
+
+        .answer-block {
+            margin-top: 16px;
+        }
+
+        .diagram-box {
+            margin: 14px 0;
+            padding: 12px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 0.82em;
+            line-height: 1.45;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #152028;
+            overflow-x: auto;
+        }
+
+        .diagram-box img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            background: #fff;
+        }
+
+        .examen-section .diagram-title {
+            color: #ffd700;
+        }
+
+        .examen-section .diagram-box {
+            background: #fff;
+            color: #152028;
+            border-color: rgba(255, 255, 255, 0.35);
+        }
+
+        .examen-section .note {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.88);
+            font-style: italic;
+            margin: 8px 0;
+        }
+        
+        /* Mapa Conceptual - Botones más pequeños y sutiles */
+        .mindmap-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        
+        .mindmap-node {
+            margin-bottom: 8px;
+        }
+        
+        .mindmap-node.level-2 {
+            margin-left: 20px;
+        }
+        
+        .mindmap-node.level-3 {
+            margin-left: 40px;
+        }
+        
+        .mindmap-header {
+            background: #fafafa;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+            user-select: none;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .mindmap-header:hover {
+            background: #f0f0f0;
+            border-color: #ccc;
+        }
+        
+        .mindmap-header.active {
+            background: #e8e8e8;
+            border-color: #bbb;
+        }
+        
+        .mindmap-header h4 {
+            margin: 0;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #444;
+        }
+        
+        .mindmap-arrow {
+            transition: transform 0.2s ease;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .mindmap-arrow.active {
+            transform: rotate(90deg);
+        }
+        
+        .mindmap-content {
+            display: none;
+            padding: 0 0 0 12px;
+        }
+        
+        .mindmap-content.active {
+            display: block;
+            padding: 12px 0 8px 12px;
+        }
+        
+        .mindmap-description {
+            background: #f8f9fa;
+            padding: 10px 12px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.6;
+            border-left: 3px solid #ddd;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 25px 0;
+            color: #888;
+            font-size: 0.85rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 70px 20px 20px 20px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+            }
+            
+            section {
+                padding: 20px;
+            }
+            
+            .mindmap-container {
+                padding: 20px;
+            }
+            
+            .mindmap-node.level-2 {
+                margin-left: 15px;
+            }
+            
+            .mindmap-node.level-3 {
+                margin-left: 30px;
+            }
+            
+            table {
+                font-size: 0.8em;
+            }
+            
+            th, td {
+                padding: 8px;
+            }
+        }
+        
+        /* Overlay para móvil */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay para móvil -->
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+    
+    <!-- Menú Hamburguesa -->
+    <button class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    
+    <div class="layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>Índice de Contenidos</h3>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#mindmap">Mapa Conceptual Interactivo</a></li>
+                    <li><a href="#mapa-costos">&nbsp;&nbsp;Costos y Complejidad</a></li>
+                    <li><a href="#mapa-ingenieria">&nbsp;&nbsp;Ingeniería del Software</a></li>
+                    <li><a href="#repaso-parcial">Repaso Parcial</a></li>
+                    <li><a href="#modelos-uml">Modelos y UML</a></li>
+                    <li><a href="#repaso-parcial-2">Repaso Parcial 2</a></li>
+                    <li><a href="#analisis-modelos">Análisis y Modelos</a></li>
+                    <li><a href="#diagramas-actividades">Diagramas de Actividades y Clases</a></li>
+                    <li><a href="#examen">Apartado Examen</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+
+            <h1>Repaso Ingeniería del Software 1 y Examen Práctico UML</h1>
+
+            <!-- MAPA CONCEPTUAL INTERACTIVO -->
+        <div id="mindmap" class="mindmap-container">
+            <h2>Mapa Conceptual Interactivo</h2>
+            <p style="color: #636e72; margin-bottom: 24px;">Contenido basado en los mapas conceptuales del cuaderno. Haz clic en cada elemento para desplegar su definición.</p>
+
+            <!-- MAPA 1: Costos y Complejidad del Software -->
+            <div class="mindmap-node level-1" id="mapa-costos">
+                <div class="mindmap-header" onclick="toggleNode(this)">
+                    <h4>Costos y Complejidad del Software</h4>
+                    <span class="mindmap-arrow">▶</span>
+                </div>
+                <div class="mindmap-content">
+                    <div class="mindmap-description">Visión integral de los costos, la complejidad y la calidad en el desarrollo de software.</div>
+
+                    <div class="mindmap-node level-2">
+                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Categorías de Costos</h4><span class="mindmap-arrow">▶</span></div>
+                        <div class="mindmap-content">
+                            <div class="mindmap-description">Clasificación de los gastos asociados a un proyecto de software según su naturaleza y visibilidad.</div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Costos Directos</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Salarios de desarrolladores:</strong> Remuneración del equipo que construye el software.<br>
+                                        <strong>Licencias de software:</strong> Pago por herramientas, IDEs, frameworks o servicios usados en el proyecto.<br>
+                                        <strong>Infraestructura y servidores:</strong> Hardware, cloud y recursos necesarios para desarrollar y ejecutar el sistema.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Costos Indirectos</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Capacitación del personal:</strong> Formación continua para mantener al equipo actualizado.<br>
+                                        <strong>Gestión y administración:</strong> Coordinación, planificación y supervisión del proyecto.<br>
+                                        <strong>Gastos operativos generales:</strong> Oficina, servicios, comunicaciones y otros costos de funcionamiento.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Costos Ocultos</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Corrección de errores tardíos:</strong> Arreglar fallas en etapas avanzadas cuesta mucho más que detectarlas temprano.<br>
+                                        <strong>Deuda técnica y retrabajo:</strong> Atajos o mal diseño que obligan a rehacer trabajo posteriormente.<br>
+                                        <strong>Cancelación de proyectos:</strong> Pérdida total de la inversión cuando un proyecto no se completa.<br>
+                                        <strong>Daño reputacional:</strong> Impacto en la imagen de la empresa por entregas fallidas o de mala calidad.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mindmap-node level-2">
+                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Tipos de Complejidad</h4><span class="mindmap-arrow">▶</span></div>
+                        <div class="mindmap-content">
+                            <div class="mindmap-description">Tres dimensiones que explican por qué el software es difícil de construir y mantener.</div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Complejidad del Problema</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Dificultad inherente al dominio:</strong> Algunos problemas son complejos por naturaleza (finanzas, salud, logística).<br>
+                                        <strong>Requisitos volátiles y conflictos:</strong> Cambios frecuentes o requisitos contradictorios entre stakeholders.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Complejidad de la Solución</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Decisiones de diseño:</strong> Cada elección arquitectónica puede simplificar o complicar el sistema.<br>
+                                        <strong>Riesgo de sobre-ingeniería:</strong> Agregar complejidad innecesaria más allá de lo que el problema requiere.<br>
+                                        <strong>Mecanismos internos:</strong> Algoritmos, patrones y estructuras que componen la solución técnica.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Complejidad del Software</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Estructura del código final:</strong> Organización del código resultante y su legibilidad.<br>
+                                        <strong>Tamaño y acoplamiento:</strong> A mayor volumen y dependencias entre módulos, mayor dificultad de cambio.<br>
+                                        <strong>Dificultad de mantenimiento:</strong> Esfuerzo necesario para corregir, adaptar o extender el software en producción.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mindmap-node level-2">
+                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Software Suficientemente Bueno</h4><span class="mindmap-arrow">▶</span></div>
+                        <div class="mindmap-content">
+                            <div class="mindmap-description">Enfoque pragmático: el software no tiene que ser perfecto, sino adecuado para su propósito.</div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Conceptos Clave</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Equilibrio calidad-costo-tiempo:</strong> Buscar el balance óptimo entre los tres factores del triángulo de proyecto.<br>
+                                        <strong>Punto justo de utilidad:</strong> Nivel de calidad que satisface al usuario sin sobreinvertir.<br>
+                                        <strong>Entrega pronta y frecuente:</strong> Liberar versiones tempranas para obtener feedback y reducir riesgo.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Estrategias</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>MVP (Mínimo Producto Viable):</strong> Versión mínima con funcionalidad suficiente para validar la idea con usuarios reales.<br>
+                                        <strong>Ciclos construir-medir-aprender:</strong> Iterar rápidamente: construir, medir resultados y aprender para mejorar.<br>
+                                        <strong>Mejora iterativa:</strong> Refinar el producto progresivamente en base a retroalimentación continua.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mindmap-node level-2">
+                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Gestión y Ciclo de Vida (SDLC)</h4><span class="mindmap-arrow">▶</span></div>
+                        <div class="mindmap-content">
+                            <div class="mindmap-description">Organización de las fases y modelos que guían el desarrollo de software de principio a fin.</div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Etapas Fundamentales</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Planificación y Requerimientos:</strong> Definir qué debe hacer el sistema y planificar el trabajo.<br>
+                                        <strong>Análisis y Diseño:</strong> Modelar la solución y definir la arquitectura antes de codificar.<br>
+                                        <strong>Desarrollo y Pruebas:</strong> Implementar el código y verificar que cumple los requisitos.<br>
+                                        <strong>Despliegue y Mantenimiento:</strong> Poner en producción y evolucionar el sistema en el tiempo.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Modelos de Procesos</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Cascada (Tradicional):</strong> Fases secuenciales; ideal para requisitos estables y bien definidos.<br>
+                                        <strong>Incremental y Espiral:</strong> Entregas parciales con gestión de riesgos en cada iteración.<br>
+                                        <strong>Prototipos:</strong> Construir versiones exploratorias para clarificar requisitos con el cliente.<br>
+                                        <strong>Modelos Ágiles:</strong> Iteraciones cortas, colaboración continua y adaptación al cambio (Scrum, Kanban).
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mindmap-node level-2">
+                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Atributos de Calidad</h4><span class="mindmap-arrow">▶</span></div>
+                        <div class="mindmap-content">
+                            <div class="mindmap-description">Características que determinan qué tan bueno es un producto de software.</div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Confiabilidad</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Consistencia sin fallos:</strong> El sistema funciona de forma predecible y estable.<br>
+                                        <strong>Cumplimiento de expectativas:</strong> Entrega lo que el usuario necesita de manera confiable.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Robustez</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Resistencia a condiciones adversas:</strong> Soporta cargas altas, errores de entrada o fallos parciales.<br>
+                                        <strong>Manejo de imprevistos:</strong> Recuperación ante situaciones no previstas sin colapsar.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Prácticas de Construcción</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Diseño modular:</strong> Dividir en partes independientes para facilitar cambios y pruebas.<br>
+                                        <strong>Validación de entradas:</strong> Verificar datos antes de procesarlos para evitar errores.<br>
+                                        <strong>Monitoreo continuo:</strong> Observar el comportamiento del sistema en producción para detectar problemas.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAPA 2: Ingeniería del Software -->
+            <div class="mindmap-node level-1" id="mapa-ingenieria">
+                <div class="mindmap-header" onclick="toggleNode(this)">
+                    <h4>Ingeniería del Software</h4>
+                    <span class="mindmap-arrow">▶</span>
+                </div>
+                <div class="mindmap-content">
+                    <div class="mindmap-description">Disciplina que aplica principios de ingeniería al desarrollo sistemático de software.</div>
+
+                    <div class="mindmap-node level-2">
+                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Conceptos y Definiciones</h4><span class="mindmap-arrow">▶</span></div>
+                        <div class="mindmap-content">
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Disciplina de Ingeniería</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">Aplica métodos sistemáticos, medibles y repetibles para crear software de calidad, no solo programar.</div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Áreas SWEBOK</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Requisitos:</strong> Captura y análisis de necesidades del sistema.<br>
+                                        <strong>Diseño y Construcción:</strong> Arquitectura, diseño detallado e implementación.<br>
+                                        <strong>Pruebas y Mantenimiento:</strong> Verificación del producto y evolución post-entrega.<br>
+                                        <strong>Gestión de Configuración:</strong> Control de versiones y cambios en artefactos.<br>
+                                        <strong>Calidad y aspectos Profesionales:</strong> Estándares de calidad y ética del ingeniero de software.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Actividades fundamentales</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Especificación:</strong> Definir qué debe hacer el software (requisitos).<br>
+                                        <strong>Desarrollo:</strong> Construir el software según la especificación.<br>
+                                        <strong>Validación:</strong> Comprobar que cumple las necesidades del cliente.<br>
+                                        <strong>Evolución:</strong> Adaptar el software a cambios en requisitos o entorno.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mindmap-node level-2">
+                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Complejidad del Software</h4><span class="mindmap-arrow">▶</span></div>
+                        <div class="mindmap-content">
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Tipos</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>De Problema (Inherente):</strong> Complejidad que viene del dominio del negocio.<br>
+                                        <strong>De la Solución (Añadida):</strong> Complejidad introducida por decisiones de diseño e implementación.<br>
+                                        <strong>Del Entorno (Interacción Real):</strong> Complejidad por integración con otros sistemas y contexto operativo.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Aspectos</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Comprensibilidad:</strong> Qué tan fácil es entender el código y la arquitectura.<br>
+                                        <strong>Mantenibilidad:</strong> Facilidad para modificar y extender el software.<br>
+                                        <strong>Confiabilidad:</strong> Capacidad de funcionar correctamente bajo condiciones normales y excepcionales.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mindmap-node level-2">
+                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Tipos de Costos</h4><span class="mindmap-arrow">▶</span></div>
+                        <div class="mindmap-content">
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Directos</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Salarios:</strong> Pago al personal de desarrollo.<br>
+                                        <strong>Licencias:</strong> Software y herramientas adquiridas para el proyecto.<br>
+                                        <strong>Infraestructura dedicada:</strong> Servidores, equipos y recursos asignados exclusivamente al proyecto.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Indirectos</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Capacitación:</strong> Formación del equipo en nuevas tecnologías o metodologías.<br>
+                                        <strong>Soporte técnico:</strong> Asistencia interna o externa para resolver problemas.<br>
+                                        <strong>Pérdidas de oportunidad:</strong> Recursos usados aquí que no pueden dedicarse a otros proyectos.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Ocultos</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Mal funcionamiento:</strong> Costos por bugs en producción, caídas o datos corruptos.<br>
+                                        <strong>Retrabajo de procesos:</strong> Rehacer trabajo por mala planificación o comunicación.<br>
+                                        <strong>Obsolescencia anticipada:</strong> Software que queda desactualizado antes de amortizar la inversión.<br>
+                                        <strong>Deuda técnica:</strong> Costo futuro por decisiones técnicas apresuradas o deficientes.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mindmap-node level-2">
+                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Modelos de Procesos</h4><span class="mindmap-arrow">▶</span></div>
+                        <div class="mindmap-content">
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Niveles Conceptuales</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>SDLC (Ciclo de vida):</strong> Marco general de fases del software.<br>
+                                        <strong>Familias de modelos:</strong> Agrupaciones de enfoques similares (predictivos, iterativos, ágiles).<br>
+                                        <strong>Modelos Concretos:</strong> Instancias específicas como Cascada o Scrum.<br>
+                                        <strong>Metodologías:</strong> Procesos detallados con roles, artefactos y ceremonias definidas.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Enfoques Clásicos</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Cascada (Lineal Predictivo):</strong> Fases secuenciales sin retroceso.<br>
+                                        <strong>Incremental (Entregas sucesivas):</strong> Funcionalidad entregada en partes.<br>
+                                        <strong>Evolutivo (Prototipado):</strong> Prototipos que evolucionan hacia el producto final.<br>
+                                        <strong>Espiral (Gestión de riesgos):</strong> Iteraciones con análisis explícito de riesgo en cada vuelta.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Enfoques Contemporáneos</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Ágiles (Scrum, XP, Kanban):</strong> Iteraciones cortas, feedback continuo y equipos autoorganizados.<br>
+                                        <strong>DevOps (CI/CD y colaboración):</strong> Integración continua entre desarrollo y operaciones.<br>
+                                        <strong>TDD (Test-Driven Development):</strong> Escribir pruebas antes que el código de producción.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mindmap-node level-2">
+                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Modelado y Análisis</h4><span class="mindmap-arrow">▶</span></div>
+                        <div class="mindmap-content">
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Objetivos del Análisis</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Identificación de requisitos:</strong> Descubrir qué necesita el cliente y los usuarios.<br>
+                                        <strong>Evaluación de viabilidad:</strong> Determinar si el proyecto es técnicamente y económicamente viable.<br>
+                                        <strong>Documento de diseño:</strong> Base formal para las fases de diseño e implementación.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Niveles de Modelado</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Conceptual (Idea general):</strong> Qué hace el sistema, sin detalles técnicos.<br>
+                                        <strong>Lógico (Estructura):</strong> Cómo se organizan los componentes y datos.<br>
+                                        <strong>Físico (Implementación):</strong> Detalle concreto de tecnologías, hardware y despliegue.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Principios</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Abstracción:</strong> Mostrar solo lo esencial para el propósito del modelo.<br>
+                                        <strong>Simplificación:</strong> Reducir complejidad sin perder información relevante.<br>
+                                        <strong>Precisión Gradual:</strong> Refinar el modelo progresivamente con más detalle.<br>
+                                        <strong>Modularidad:</strong> Dividir el sistema en partes modelables por separado.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mindmap-node level-2">
+                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Orientación a Objetos (OO)</h4><span class="mindmap-arrow">▶</span></div>
+                        <div class="mindmap-content">
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Conceptos Básicos</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Clase:</strong> Plantilla o molde que define atributos y comportamientos.<br>
+                                        <strong>Objeto:</strong> Instancia concreta de una clase con valores propios.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Pilares de OO</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Abstracción:</strong> Representar conceptos esenciales ocultando detalles.<br>
+                                        <strong>Encapsulamiento:</strong> Ocultar implementación interna y exponer solo lo necesario.<br>
+                                        <strong>Herencia:</strong> Reutilizar y extender comportamiento de clases existentes.<br>
+                                        <strong>Polimorfismo:</strong> Un mismo mensaje puede producir comportamientos distintos según el objeto.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Elementos de Interacción</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Atributos:</strong> Variables que representan el estado del objeto.<br>
+                                        <strong>Operaciones:</strong> Métodos que definen el comportamiento del objeto.<br>
+                                        <strong>Mensajes:</strong> Unidad de comunicación entre objetos para invocar operaciones.<br>
+                                        <strong>Interfaces:</strong> Contrato que define qué operaciones debe ofrecer una clase.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mindmap-node level-2">
+                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>UML (Lenguaje Unificado de Modelado)</h4><span class="mindmap-arrow">▶</span></div>
+                        <div class="mindmap-content">
+                            <div class="mindmap-description">Lenguaje visual estándar para modelar sistemas orientados a objetos.</div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Funciones</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">
+                                        <strong>Visualizar:</strong> Representar el sistema de forma gráfica comprensible.<br>
+                                        <strong>Especificar:</strong> Definir requisitos y diseño con precisión.<br>
+                                        <strong>Construir:</strong> Generar código o esqueletos a partir de modelos.<br>
+                                        <strong>Documentar:</strong> Registrar decisiones de diseño para el equipo y mantenimiento.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Diagramas Estructurales (Estáticos)</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">Representan la estructura fija del sistema, sin comportamiento dinámico.</div>
+                                    <div class="mindmap-node level-3">
+                                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Clases</h4><span class="mindmap-arrow">▶</span></div>
+                                        <div class="mindmap-content"><div class="mindmap-description">Muestra clases, atributos, métodos y relaciones (asociación, herencia, agregación, composición).</div></div>
+                                    </div>
+                                    <div class="mindmap-node level-3">
+                                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Objetos</h4><span class="mindmap-arrow">▶</span></div>
+                                        <div class="mindmap-content"><div class="mindmap-description">Instantánea del sistema en un momento dado, con objetos concretos y valores reales.</div></div>
+                                    </div>
+                                    <div class="mindmap-node level-3">
+                                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Componentes</h4><span class="mindmap-arrow">▶</span></div>
+                                        <div class="mindmap-content"><div class="mindmap-description">Organización modular del software: componentes reemplazables y sus interfaces provistas/requeridas.</div></div>
+                                    </div>
+                                    <div class="mindmap-node level-3">
+                                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Despliegue</h4><span class="mindmap-arrow">▶</span></div>
+                                        <div class="mindmap-content"><div class="mindmap-description">Arquitectura física: nodos, artefactos (.jar, .apk) y protocolos de comunicación (HTTP, JDBC).</div></div>
+                                    </div>
+                                    <div class="mindmap-node level-3">
+                                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Paquetes</h4><span class="mindmap-arrow">▶</span></div>
+                                        <div class="mindmap-content"><div class="mindmap-description">Agrupa elementos del modelo en capas (Presentación, Lógico, Datos) y muestra dependencias.</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mindmap-node level-3">
+                                <div class="mindmap-header" onclick="toggleNode(this)"><h4>Diagramas de Comportamiento (Dinámicos)</h4><span class="mindmap-arrow">▶</span></div>
+                                <div class="mindmap-content">
+                                    <div class="mindmap-description">Representan interacciones, flujos y cambios de estado en el tiempo.</div>
+                                    <div class="mindmap-node level-3">
+                                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Casos de Uso</h4><span class="mindmap-arrow">▶</span></div>
+                                        <div class="mindmap-content"><div class="mindmap-description">Interacciones entre actores y el sistema. Relaciones: <strong>include</strong> (obligatorio) y <strong>extend</strong> (opcional).</div></div>
+                                    </div>
+                                    <div class="mindmap-node level-3">
+                                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Actividades</h4><span class="mindmap-arrow">▶</span></div>
+                                        <div class="mindmap-content"><div class="mindmap-description">Flujo de procesos con acciones, decisiones (◇), bifurcaciones paralelas y carriles (swimlanes).</div></div>
+                                    </div>
+                                    <div class="mindmap-node level-3">
+                                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Secuencia</h4><span class="mindmap-arrow">▶</span></div>
+                                        <div class="mindmap-content"><div class="mindmap-description">Orden temporal de mensajes entre objetos. Incluye líneas de vida, mensajes síncronos/asíncronos y fragmentos (alt, loop, opt).</div></div>
+                                    </div>
+                                    <div class="mindmap-node level-3">
+                                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Estados</h4><span class="mindmap-arrow">▶</span></div>
+                                        <div class="mindmap-content"><div class="mindmap-description">Ciclo de vida de un objeto: estados, transiciones, eventos disparadores y estados compuestos con subestados.</div></div>
+                                    </div>
+                                    <div class="mindmap-node level-3">
+                                        <div class="mindmap-header" onclick="toggleNode(this)"><h4>Comunicación</h4><span class="mindmap-arrow">▶</span></div>
+                                        <div class="mindmap-content"><div class="mindmap-description">Similar a secuencia pero enfatiza relaciones estructurales; mensajes numerados (1, 2, 3…) indican el orden.</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- Repaso Parcial -->
+        <section id="repaso-parcial">
+            <h2>Repaso Parcial</h2>
+            <p><strong>1.</strong> F. El modelado en cascada es un proceso secuencial y lineal, donde cada fase debe completarse totalmente antes de pasar a la siguiente fase.</p>
+            <p><strong>2.</strong> F. UML es una herramienta integral de desarrollo que acompaña al sistema a lo largo de todo su ciclo de vida.</p>
+            <p><strong>3.</strong> Objetivo principal del modelado en ingeniería del software: Facilitar la comunicación entre los miembros del equipo y los stakeholders.</p>
+            
+            <p><strong>4.</strong> Comparar conceptos entre: modelos de proceso "Cascada" e "Incremental"</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cascada</th>
+                        <th>Incremental</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Modelo secuencial y lineal, cada fase se completa antes de comenzar la siguiente. Estructura clara, previsible y fácil de gestionar y documentar. Muy poca flexibilidad ante cambios. Especial para proyectos con requisitos estables y bien definidos desde el principio.</td>
+                        <td>Modelo iterativo que construye y entrega el software en incrementos funcionales. Cada uno hace su ciclo de análisis, diseño, implementación y pruebas. Permite incorporar cambios y obtener retroalimentación temprana del usuario para no desviarse de su objetivo. Mayor complejidad de gestión (coordinar múltiples versiones). Para proyectos con requisitos cambiantes o parcialmente definidos.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>5.</strong> Comparar y analizar proyectos:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Proyecto</th>
+                        <th>Requerimientos</th>
+                        <th>Nivel riesgo</th>
+                        <th>Modelo recomendado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>A</td>
+                        <td>Estables</td>
+                        <td>Bajo</td>
+                        <td>Cascada</td>
+                    </tr>
+                    <tr>
+                        <td>B</td>
+                        <td>Cambiantes</td>
+                        <td>Alto</td>
+                        <td>Espiral</td>
+                    </tr>
+                    <tr>
+                        <td>C</td>
+                        <td>Parcialmente definidos</td>
+                        <td>Medio</td>
+                        <td>Incremental</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>¿Por qué espiral para el proyecto B?</strong> Porque el nivel de riesgo es alto y el modelo espiral combina iteraciones con un enfoque sistemático en la gestión de riesgos. Ejecutando en cada vuelta las cuatro fases: planificación, análisis de riesgo, desarrollo y evaluación. Los cambios se pueden ajustar en cada iteración, y los riesgos se gestionan en cada ciclo. Si el modelo fuera cascada, hacer un cambio implicaría reiniciar las fases completas o un costo muy elevado.</p>
+            <p><strong>¿Costos indirectos generados si el proyecto C fuese de un modelo cascada?</strong> Retrabajo masivo: al no tener requisitos completos, la cascada obliga a construir sobre supuestos. Deuda técnica: puede crecer desordenado, con parches y soluciones provisorias. Cambios en procesos y estructuras internas generados por no cumplir las satisfacciones reales.</p>
+        </section>
+
+        <!-- Modelos y UML -->
+        <section id="modelos-uml">
+            <h2>Modelos de Software y UML</h2>
+            <p><strong>Teniendo un proyecto de app móvil con requerimientos cambiantes, ¿cuál es el modelo de software más adecuado? Argumenta.</strong></p>
+            <p>El modelo Ágil (Scrum): Iteraciones cortas, permite entregar versiones funcionales rápidamente y recibir feedback antes que los cambios sean costosos. En cada iteración se puede adaptar a cambios sin generar las necesidades. La colaboración del usuario es importante ya que su experiencia con la app es fundamental en el desarrollo. El cliente puede publicar versiones mientras el desarrollo continúa.</p>
+            <ul>
+                <li>Cascada no, porque requeriría que los requisitos estén bien definidos.</li>
+                <li>Iterativo no gestiona riesgos y puede volverse difícil de controlar si se cambia la estructura base.</li>
+                <li>Espiral está pensado para proyectos grandes con alto riesgos técnicos.</li>
+            </ul>
+
+            <p><strong>¿UML garantiza el éxito en el desarrollo de software? Argumenta a favor y en contra.</strong></p>
+            <p><em>Argumentos a favor:</em><br>
+            Previene malentendidos entre clientes, analistas y desarrolladores. Modelar el sistema antes de programarlo permite identificar errores en papel antes que en código. La abstracción y los diferentes niveles de modelado permiten abordar sistemas complejos de forma estructurada y comprensible. Preserva las decisiones de diseño, facilitando la incorporación de nuevos miembros y el mantenimiento del proyecto.</p>
+            <p><em>Argumentos en contra:</em><br>
+            UML es una herramienta, no una metodología. Tiene 14 tipos de diagramas; usarlos mal puede ralentizar el proyecto sin agregar valor real. No es un lenguaje matemáticamente formal, por lo que podría generar malas interpretaciones por parte de desarrolladores.</p>
+        </section>
+
+        <!-- Repaso Parcial 2 -->
+        <section id="repaso-parcial-2">
+            <h2>Repaso Parcial 2</h2>
+            <p><strong>Características del diagrama de estado</strong></p>
+            <ul>
+                <li>El paso de elemento de actividad a otro elemento de actividad no requiere disparador. ✓ La finalización de una actividad dispara implícitamente el inicio de la siguiente (flujo de control automático).</li>
+                <li>Los estados pueden tener subestados. ✓ UML define esto como un Estado Compuesto.</li>
+                <li>Un estado puede tener múltiples transiciones de entrada. ✓ Diferentes eventos desde distintos orígenes pueden converger en un mismo estado.</li>
+            </ul>
+
+            <p><strong>Análisis de estructuras Todo-Parte</strong></p>
+            <ul>
+                <li><strong>Agregación:</strong> Departamento ◇— Profesor — No exclusiva. Las partes pueden existir en independencia del todo.</li>
+                <li><strong>Composición:</strong> Casa ◆— Habitación — Dependencia vital. Propiedad exclusiva y destrucción en cascada.</li>
+            </ul>
+            <p>"Una composición permite modelar el caso de clases no exclusivas (partes) que complementan a la clase compuesta (todo)" → <strong>Falso.</strong> La afirmación describe una Agregación; la composición exige exclusividad y subordinación del ciclo de vida.</p>
+
+            <div class="answer-block">
+                <p class="diagram-title">Agregación vs. Composición</p>
+                <div class="diagram-box">@startuml
+                    hide circle
+title Agregacion y Composicion
+
+class Departamento
+class Profesor
+Departamento o-- Profesor
+
+class Casa
+class Habitacion
+Casa *-- Habitacion
+
+note bottom of Departamento
+  No exclusiva: las partes pueden
+  existir con independencia del todo
+end note
+
+note bottom of Casa
+  Dependencia vital: propiedad
+  exclusiva y destruccion en cascada
+end note
+@enduml</div>
+            </div>
+
+            <p><strong>Crear un diagrama de secuencia con las siguientes interacciones:</strong></p>
+            <ul>
+                <li>El objeto A envía el mensaje m1() al objeto B.</li>
+                <li>El objeto B envía el mensaje beta() al objeto C y recibe una respuesta.</li>
+                <li>Si beta() &gt; 5, el objeto C envía un mensaje delta() al objeto A.</li>
+            </ul>
+
+            <div class="answer-block">
+                <p class="diagram-title">Diagrama de Secuencia — Objetos A, B y C</p>
+                <div class="diagram-box">@startuml
+hide footbox
+participant ":Objeto A" as A
+participant ":Objeto B" as B
+participant ":Objeto C" as C
+
+A -> B : m1()
+activate B
+B -> C : beta()
+activate C
+C --> B :
+deactivate C
+alt beta() > 5
+  C -> A : delta()
+  activate A
+  deactivate A
+end
+deactivate B
+@enduml</div>
+            </div>
+        </section>
+
+        <!-- Análisis y Modelos -->
+        <section id="analisis-modelos">
+            <h2>Análisis y Modelos de Proceso</h2>
+            <p><strong>Objetivo del análisis de sistemas:</strong> profundizar las necesidades y el contexto del sistema antes de su construcción. Identifica los requisitos más precisos, evalúa la viabilidad técnica y económica del proyecto, define funciones del sistema, identifica restricciones y establece una base sólida para las fases de diseño y construcción.</p>
+            
+            <p><strong>Abstracción:</strong> consiste en tomar lo esencial para el sistema, obviando los detalles innecesarios para el propósito en cuestión. Un modelo que abstrae menos termina siendo complejo y no aclara nada.</p>
+            
+            <p><strong>La modularidad:</strong> permite dividir un sistema complejo en partes pequeñas e independientes, cada una comprensible sin necesidad de las otras. Esto reduce la complejidad y facilita el mantenimiento.</p>
+            
+            <p>Estos principios juntos permiten construir sistemas robustos, eficientes y adaptables al cambio, controlando tres tipos de complejidad: del problema (dificultad inherente del dominio), de la solución (las decisiones del diseño) y del software (qué tan difícil es mantener el sistema final).</p>
+
+            <p><strong>Modelos de proceso del software:</strong> organizan cómo se recorren las fases del ciclo de vida del software. No son recetas rígidas, son herramientas adaptables que permiten planificar y controlar el trabajo según el contexto del proyecto:</p>
+            <ul>
+                <li><strong>Cascada:</strong> para proyectos con requisitos estables y bien definidos, donde predecir y documentar es clave.</li>
+                <li><strong>Incremental:</strong> especial para proyectos donde los requisitos evolucionan, permite entregas parciales con retroalimentación temprana del usuario.</li>
+                <li><strong>Espiral:</strong> para proyectos de alto riesgo e incertidumbre, combina iteración y gestión explícita de riesgos en cada ciclo.</li>
+                <li><strong>Ágiles (Scrum):</strong> para entornos dinámicos con cambios frecuentes, priorizando la entrega de valor y colaboración continua.</li>
+            </ul>
+            <p>La elección correcta de modelos reduce los costos del proyecto al estructurarlo de manera eficiente.</p>
+
+            <p><strong>Ejemplo de proyecto pequeño</strong></p>
+            <p><strong>Gestión de biblioteca escolar:</strong> se identificaron primero los actores (bibliotecario, alumno) y los procesos clave (préstamo, devolución, reserva). Sin esto, se habría construido un sistema sin considerar casos de extravíos o renovaciones.</p>
+            <p>Se identificaron clases (libro, alumno, préstamo) y sus relaciones. Esto permitió detectar tempranamente que un libro tiene múltiples ejemplares (requisito no verbalizado por el cliente).</p>
+            <p><strong>Modelo de proceso incremental:</strong> en el primer incremento se entrega el módulo de búsqueda y préstamo básico. El feedback del bibliotecario reveló que necesitaba un sistema de alertas por vencimiento, se añadió en el segundo incremento.</p>
+            <p>El modelo evitó costosos cambios en la base de datos y redujo el tiempo total de desarrollo en aproximadamente un 30%, porque los errores se detectaron en papel (costo bajo) y no en código (costo alto).</p>
+        </section>
+
+        <!-- Diagramas de Actividades y Clases -->
+        <section id="diagramas-actividades">
+            <h2>Diagramas de Actividades y Clases</h2>
+            <p><strong>Crear un diagrama de Actividades que modele el flujo de proceso de reparación de un vehículo en un taller</strong></p>
+            <p>Inicio → Recepción → Verificación de fallas reportadas por el cliente → ¿Hay fallas reportadas?</p>
+            <ul>
+                <li><strong>No</strong> → Detener el proceso (fin)</li>
+                <li><strong>Sí</strong> → Iniciar la reparación del vehículo → (bifurcación paralela: Reparación mecánica / Revisión general) → Verificación mecánica → Verificar el buen funcionamiento del vehículo → Facturación y cobro → Entrega del vehículo al cliente → Fin del proceso</li>
+            </ul>
+
+            <div class="answer-block">
+                <p class="diagram-title">Diagrama de Actividades — Reparación de vehículo en taller</p>
+                <div class="diagram-box">@startuml
+start
+:Inicio;
+:Recepcion;
+:Verificacion de fallas reportadas por el cliente;
+if (Hay fallas reportadas?) then (Si)
+  :Iniciar la reparacion del vehiculo;
+  fork
+    :Reparacion mecanica;
+  fork again
+    :Revision general;
+  end fork
+  :Verificacion mecanica;
+  :Verificar buen funcionamiento del vehiculo;
+  :Facturacion y cobro;
+  :Entrega del vehiculo al cliente;
+  :Fin del proceso;
+  stop
+else (No)
+  :Detener el proceso;
+  stop
+endif
+@enduml</div>
+            </div>
+
+            <p><strong>Realizar diagramas de clases a partir del diagrama de secuencia</strong></p>
+            <ul>
+                <li>Si A envía m1() a B</li>
+                <li>Si B envía beta() a C</li>
+                <li>Si C envía delta() a A</li>
+            </ul>
+            <p>Clase A (+delta(): void), Clase B (+m1(): void), Clase C (+beta(): int)</p>
+
+            <div class="answer-block">
+                <p class="diagram-title">Diagrama de Clases — Derivado del diagrama de secuencia</p>
+                <div class="diagram-box">@startuml
+                    hide circle
+                    skinparam classAttributeIconSize 0
+class "Clase A" as A {
+  + delta(): void
+}
+class "Clase B" as B {
+  + m1(): void
+}
+class "Clase C" as C {
+  + beta(): int
+}
+A ..> B : m1()
+B ..> C : beta()
+C ..> A : delta()
+@enduml</div>
+            </div>
+        </section>
+
+        <!-- Apartado Examen -->
+        <section id="examen" class="examen-section">
+            <h2>Apartado Examen: Examen Práctico UML (Simulacro)</h2>
+            <p><em>Contenido para práctica del examen de UML — diagramas del cuaderno renderizados con PlantUML.</em></p>
+
+            <h3>Conceptos Estructurales y de Comportamiento</h3>
+            <p><strong>1a. Diferencia entre Diagrama estructural y de comportamiento</strong><br>
+            El diagrama estructural es la base estática de los sistemas; por ejemplo, el diagrama de clases muestra la estructura de dominio del sistema. Por otro lado, los de comportamiento son las relaciones y compartimiento de mensajes entre objetos; por ejemplo, el diagrama de secuencia.</p>
+            
+            <p><strong>1b. Diferencia entre diagrama de componente y despliegue</strong><br>
+            El diagrama de componente es la organización física y lógica de los componentes del software; un componente es una unidad modular reemplazable que expone interfaces. Un diagrama de despliegue es la arquitectura de ejecución de un sistema, muestra en dónde están ubicados cada artefacto y nodo, y cómo se comunican.</p>
+            
+            <p><strong>2. Casos de Uso – Sistema de Gimnasio</strong><br>
+            Actores: Persona Registrada (con Socio y Entrenador como especializaciones), Administrador.<br>
+            Casos de uso: Actualizar datos personales, Inscribirse a clase, Consultar rutina («include» Verificar pago cuota), Asignar rutina («extend» Recomendar dieta), Generar reportes («extend» Generar reportes de pago, «extend» Generar reportes de asistencia).</p>
+
+            <div class="answer-block">
+                <p class="diagram-title">Diagrama de Casos de Uso — Sistema de Gimnasio</p>
+                <div class="diagram-box">@startuml
+left to right direction
+actor "Persona Registrada" as PR
+actor Socio
+actor Entrenador
+actor Administrador
+Socio --|> PR
+Entrenador --|> PR
+
+rectangle "Sistema de Gimnasio" {
+  usecase "Actualizar datos personales" as UC1
+  usecase "Inscribirse a clase" as UC2
+  usecase "Consultar Rutina" as UC3
+  usecase "Verificar pago cuota" as UC4
+  usecase "Asignar Rutina" as UC5
+  usecase "Recomendar dieta" as UC6
+  usecase "Generar reportes" as UC7
+  usecase "Generar reportes de pago" as UC8
+  usecase "Generar reportes de asistencia" as UC9
+}
+
+PR --> UC1
+Socio --> UC2
+Socio --> UC3
+Entrenador --> UC5
+Administrador --> UC7
+
+UC3 ..> UC4 : <<include>>
+UC6 ..> UC5 : <<extend>>
+UC8 ..> UC7 : <<extend>>
+UC9 ..> UC7 : <<extend>>
+@enduml</div>
+            </div>
+
+            <h3>Diagramas de Secuencia y Comunicación</h3>
+            <p><strong>Importancia de usar el diagrama de clases junto con el de secuencia</strong><br>
+            La importancia de utilizarlos juntos radica en las reglas de ejecución del estándar UML: cada mensaje intercambiado entre objetos en una secuencia debe corresponder a una operación explícitamente definida en la clase receptora, combinarlos garantiza que el sistema sea estructuralmente válido y semánticamente ejecutable, evitando enviar mensajes a operaciones inexistentes.</p>
+            
+            <p><strong>Teniendo el siguiente diagrama de secuencia, redibujar el de comunicación</strong></p>
+
+            <div class="answer-block">
+                <p class="diagram-title">Diagrama de Secuencia</p>
+                <div class="diagram-box">@startuml
+hide footbox
+actor usuario
+participant ":GUI" as GUI
+participant ":A" as A
+participant ":B" as B
+
+usuario -> GUI : f(a,b,..)
+activate GUI
+GUI -> A : m()
+activate A
+A -> B : x()
+activate B
+B --> A : y()
+deactivate B
+deactivate A
+GUI -> B : n()
+deactivate GUI
+@enduml</div>
+            </div>
+
+            <div class="answer-block">
+                <p class="diagram-title">Diagrama de Comunicación</p>
+                <div class="diagram-box">@startuml
+object usuario
+object ":GUI" as GUI
+object ":A" as A
+object ":B" as B
+
+usuario -> GUI : 1: f(a,b,..)
+GUI -> A : 2: m()
+GUI -> B : 3: n()
+A -> B : 4: x()
+B -> A : 5: y()
+@enduml</div>
+            </div>
+
+            <h3>Diagrama de Clases y Secuencia - Sistema Gimnasio</h3>
+            <p><strong>3. Diagrama de clases</strong><br>
+            Clases: Socio (id, nombre, fechaNacimiento, estado: activo/inactivo; +renovarCuota(), +consultarRutina()), Cuota (monto, fechaPago, mesCorrespondiente), Rutina (nombre, nivel, duraciónSemanas; +agregarEjercicio(ejercicio)), Ejercicio (nombre, series, repeticiones), Entrenador (id, nombre, especialidad; +asignarRutina()), PersonaRegistrada (+actualizarDatos()) — superclase de Socio y Entrenador.</p>
+
+            <div class="answer-block">
+                <p class="diagram-title">Diagrama de Clases — Sistema de Gimnasio</p>
+                <div class="diagram-box">@startuml
+                    hide circle
+                    skinparam classAttributeIconSize 0
+abstract class PersonaRegistrada {
+  +actualizarDatos(): void
+}
+class Socio {
+  -id: int
+  -nombre: String
+  -fechaNacimiento: Date
+  -estado: String
+  +renovarCuota(): void
+  +consultarRutina(): void
+}
+class Entrenador {
+  -id: int
+  -nombre: String
+  -especialidad: String
+  +asignarRutina(): void
+}
+class Cuota {
+  -monto: float
+  -fechaPago: Date
+  -mesCorrespondiente: String
+}
+class Rutina {
+  -nombre: String
+  -nivel: int
+  -duracionSemanas: int
+  +agregarEjercicio(ejercicio): void
+}
+class Ejercicio {
+  -nombre: String
+  -series: int
+  -repeticiones: int
+}
+
+Socio --|> PersonaRegistrada
+Entrenador --|> PersonaRegistrada
+
+Socio "1" *-- "*" Cuota
+Socio "1" o-- "0..1" Rutina
+Rutina "1" *-- "1..*" Ejercicio
+Socio "1..*" -- "1..*" Entrenador : entrena
+@enduml</div>
+            </div>
+            
+            <p><strong>4. Diagrama de secuencia — "Socio se inscribe a clase grupal desde la app"</strong></p>
+
+            <div class="answer-block">
+                <p class="diagram-title">Diagrama de Secuencia — Inscripción a clase grupal</p>
+                <div class="diagram-box">@startuml
+hide footbox
+actor Socio
+participant ":AppGimnasio" as App
+participant ":SistemaCuotas" as SC
+participant ":GestorClase" as GC
+participant ":Inscripcion" as Ins
+
+Socio -> App : solicitaInscripcion()
+activate App
+App -> SC : verificaSocioAlDia()
+activate SC
+SC --> App : socioAlDia()
+deactivate SC
+alt socioAlDia == false
+  App --> Socio : errorNoAlDia()
+else esta al dia
+  App -> GC : consultaCupoDisponible()
+  activate GC
+  GC --> App : cupoDisponible()
+  deactivate GC
+  App -> Ins : crearInscripcion()
+  activate Ins
+  Ins --> App : confirmarInscripcion()
+  deactivate Ins
+  App --> Socio : confirmarInscripcion()
+end
+deactivate App
+@enduml</div>
+            </div>
+
+            <h3>Diagramas de Actividades y Estados</h3>
+            <p><strong>5. Diagrama de Actividades — "Registro de asistencia diaria de un socio"</strong></p>
+
+            <div class="answer-block">
+                <p class="diagram-title">Diagrama de Actividades — Registro de asistencia diaria</p>
+                <div class="diagram-box">@startuml
+|Socio|
+start
+:Escanea carnet;
+|Sistema|
+:Verifica cuota;
+if (Esta al dia?) then (Si)
+  :Registra entrada;
+  :Aumenta contador visitas;
+  if (Es la visita Nro 20?) then (Si)
+    fork
+      :Mensaje bienvenida;
+    fork again
+      :Genera descuento;
+    end fork
+  else (No)
+  endif
+else (No)
+  |Socio|
+  :Mostrar alerta;
+endif
+stop
+@enduml</div>
+            </div>
+
+            <p><strong>6. Diagrama de Estados — "Ciclo de vida de Inscripción de clase"</strong></p>
+
+            <div class="answer-block">
+                <p class="diagram-title">Diagrama de Estados — Ciclo de vida de Inscripción</p>
+                <div class="diagram-box">@startuml
+                    [*] --> Pendiente : crear()
+                    Pendiente --> Cancelada : cancelar()
+                    Pendiente --> Confirmada : validarPago()
+                    Confirmada --> Cancelada : cancelar()
+                    Confirmada --> EnCurso : comenzarClase()
+                    EnCurso : entry / iniciaControlAsistencia
+                    EnCurso --> Finalizada : terminarClase()
+                    Cancelada --> [*]
+                    Finalizada --> [*]
+                    @enduml</div>
+            </div>
+
+            <h3>Diagramas Estructurales y Identificación</h3>
+            <p><strong>7. Diagrama de Paquetes</strong><br>
+            Presentación → Lógico → Datos (con dependencias)</p>
+
+            <div class="answer-block">
+                <p class="diagram-title">Diagrama de Paquetes</p>
+                <div class="diagram-box">@startuml
+package Presentacion {
+}
+package Logico {
+}
+package Datos {
+}
+Presentacion ..> Logico
+Logico ..> Datos
+@enduml</div>
+            </div>
+            
+            <p><strong>Diagrama de Despliegue</strong><br>
+            Presentación (Dispositivo Kotlin, App Gimnasio.apk) —HTTPS→ Servidor Apps (Gestor Clases, Sistema Cuotas) —TCP/JDBC→ Servidor BD (PostgreSQL)</p>
+            <p>Se eligió este diagrama porque modela nodos y artefactos desplegados en ellos junto con protocolos de comunicación entre nodos.</p>
+
+            <div class="answer-block">
+                <p class="diagram-title">Diagrama de Despliegue</p>
+                <div class="diagram-box">@startuml
+node "Presentacion: Dispositivo Movil" as movil {
+  artifact "App Gimnasio.apk" as app
+}
+node "Servidor App" as srv {
+  component "Gestor Clases" as gc
+  component "Sistema Cuotas" as sc
+}
+node "Servidor BD" as bd {
+  database "PostgreSQL" as db
+}
+
+movil -down-> srv : HTTPS
+srv -down-> bd : TCP/JDBC
+@enduml</div>
+            </div>
+
+            <p><strong>8. Identificación de diagramas</strong></p>
+            <ol>
+                <li><strong>Diagrama de despliegue:</strong> muestra la arquitectura de ejecución de un sistema, ubicando los artefactos, nodos y las dependencias y relaciones.</li>
+                <li><strong>Diagrama de secuencia:</strong> muestra la secuencia de mensajes entre objetos.</li>
+                <li><strong>Diagrama de estados:</strong> muestra el ciclo de vida de un evento.</li>
+                <li><strong>Diagrama de casos de uso:</strong> especial para mostrar el funcionamiento del sistema a stakeholders no técnicos.</li>
+                <li><strong>Diagrama de componentes:</strong> muestra la organización física y lógica de un sistema.</li>
+            </ol>
+        </section>
+
+        <footer>
+            <p>Documento generado para repaso de Ingeniería del Software 1 y Examen Práctico UML.</p>
+        </footer>
+        
+        </div>
+    </div>
+
+    <script>
+        function toggleNode(header) {
+            const content = header.nextElementSibling;
+            const arrow = header.querySelector('.mindmap-arrow');
+            
+            header.classList.toggle('active');
+            content.classList.toggle('active');
+            arrow.classList.toggle('active');
+        }
+        
+        // Toggle mobile menu
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+        
+        // Smooth scroll for navigation links
+        document.querySelectorAll('.sidebar nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Close menu on mobile after click
+                    if (window.innerWidth <= 768) {
+                        toggleMenu();
+                    }
+                }
+            });
+        });
+        
+        // Close menu when clicking outside on mobile
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                document.getElementById('sidebar').classList.remove('active');
+                document.getElementById('overlay').classList.remove('active');
+            }
+        });
+
+        function renderPlantUML() {
+            document.querySelectorAll('.diagram-box').forEach(function(div) {
+                if (div.dataset.rendered) return;
+                var umlCode = div.textContent.trim();
+                if (!umlCode.startsWith('@startuml')) return;
+                try {
+                    var encoded = plantumlEncoder.encode(umlCode);
+                    var img = document.createElement('img');
+                    img.src = 'https://www.plantuml.com/plantuml/svg/' + encoded;
+                    img.alt = 'Diagrama UML';
+                    img.style.cssText = 'max-width:100%;height:auto;display:block;margin:0 auto;';
+                    div.innerHTML = '';
+                    div.appendChild(img);
+                    div.style.cssText = 'border:none;background:transparent;padding:4px 0;overflow:visible;white-space:normal;';
+                    div.dataset.rendered = 'true';
+                } catch (e) {
+                    console.error('PlantUML error:', e);
+                }
+            });
+        }
+
+        renderPlantUML();
+    </script>
+
+</body>
+</html>
